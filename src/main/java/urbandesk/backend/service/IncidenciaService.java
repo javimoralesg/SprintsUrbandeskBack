@@ -78,15 +78,13 @@ public class IncidenciaService {
                 ciudadano,
                 Estado.CREADA,
                 "Incidencia creada"));
-        Incidencia incidenciaGuardada = incidenciaRepository.save(incidencia);
+        Incidencia incidenciaGuardada = incidenciaRepository.saveAndFlush(incidencia);
 
         if (ciudadano != null) {
             MailService.enviarIncidenciaCreada(ciudadano.getEmail(), incidenciaGuardada.getId(), ciudadano.getNombre());
         }
 
-        asignarOperadorAutomatico(incidenciaGuardada.getId());
-
-        return incidenciaGuardada;
+        return asignarOperadorAutomatico(incidenciaGuardada.getId());
     }
 
     public Incidencia actualizarIncidencia(Long id, Ubicacion nuevaUbicacion, String nuevaDescripcion) {
