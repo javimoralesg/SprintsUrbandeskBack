@@ -177,6 +177,9 @@ public class IncidenciaService {
 
             incidencia.asignarOperador(operador);
 
+            operador.incrementarCarga();
+            operadorRepository.save(operador);
+
             incidencia.agregarHistorial(new Historial(
                     incidencia,
                     operador,
