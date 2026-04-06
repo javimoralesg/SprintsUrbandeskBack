@@ -1,6 +1,7 @@
 package urbandesk.backend.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -161,33 +162,29 @@ public class IncidenciaService {
         return incidenciaGuardada;
     }
 
-    @Transactional
-    public Incidencia asignarOperadorAutomatico(Long incidenciaId) {
+    private void asignarOperadorAutomatico(Long incidenciaId) {
         Incidencia incidencia = obtenerPorId(incidenciaId);
 
-        Operador operadorConMenorCarga = operadorRepository.findOperadoresDisponiblesOrdenados()
-                .stream()
-                .findFirst()
-                .orElse(null);
+        List<Operador> operadores = operadorRepository.findAll();
 
-        if (operadorConMenorCarga == null) {
-            return incidencia;
+        Optional<Operador> operadorOpt = operadores.stream()
+                .filter(o -> o.getCargaActual() < o.getCargaMaxima())
+                .sorted(java.util.Comparator.comparing(Operador::getCargaActual))
+                .findFirst();
+
+        if (operadorOpt.isPresent()) {
+            Operador operador = operadorOpt.get();
+
+            incidencia.asignarOperador(operador);
+
+            incidencia.agregarHistorial(new Historial(
+                    incidencia,
+                    operador,
+                    Estado.CREADA,
+                    "Incidencia asignada a un operador"));
+
+            incidenciaRepository.save(incidencia);
         }
-
-        operadorConMenorCarga.incrementarCarga();
-        usuarioRepository.save(operadorConMenorCarga);
-
-        incidencia.asignarOperador(operadorConMenorCarga);
-
-        incidencia.agregarHistorial(new Historial(
-                incidencia,
-                operadorConMenorCarga,
-                Estado.CREADA,
-                "Incidencia asignada a un operador"));
-
-        Incidencia incidenciaGuardada = incidenciaRepository.save(incidencia);
-
-        return incidenciaGuardada;
     }
 
     public Incidencia asignarTecnico(Long incidenciaId, Long tecnicoId) {
