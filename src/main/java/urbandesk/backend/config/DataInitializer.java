@@ -31,9 +31,9 @@ public class DataInitializer implements ApplicationRunner {
         crearTecnicoJardinero();
         crearTecnicoAlbanil();
         crearTecnicoPintor();
-        crearIncidencia(1L);
-        crearIncidencia(2L);
-        crearIncidencia(3L);
+        // crearIncidencia(1L);
+        // crearIncidencia(2L);
+        // crearIncidencia(3L);
     }
 
     private void crearCiudadano() {
