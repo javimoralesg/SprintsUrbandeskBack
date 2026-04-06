@@ -19,7 +19,7 @@ public class Evidencia {
     private Long id;
 
     @NotBlank
-    @Lob
+    @Column(columnDefinition = "TEXT")
     private String url;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
