@@ -1,8 +1,6 @@
 package urbandesk.backend.service;
 
-import java.util.Comparator;
 import java.util.List;
-import java.util.Objects;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -22,6 +20,7 @@ import urbandesk.backend.domain.user.Operador;
 import urbandesk.backend.domain.user.Tecnico;
 import urbandesk.backend.domain.user.Usuario;
 import urbandesk.backend.repository.IncidenciaRepository;
+import urbandesk.backend.repository.OperadorRepository;
 import urbandesk.backend.repository.UsuarioRepository;
 
 @Service
@@ -30,6 +29,7 @@ public class IncidenciaService {
 
     private final IncidenciaRepository incidenciaRepository;
     private final UsuarioRepository usuarioRepository;
+    private final OperadorRepository operadorRepository;
     private final MailService MailService;
 
     public Incidencia obtenerPorId(Long id) {
@@ -165,13 +165,9 @@ public class IncidenciaService {
     public Incidencia asignarOperadorAutomatico(Long incidenciaId) {
         Incidencia incidencia = obtenerPorId(incidenciaId);
 
-        Operador operadorConMenorCarga = usuarioRepository.findAll().stream()
-                .filter(Operador.class::isInstance)
-                .map(Operador.class::cast)
-                .filter(Operador::tieneDisponibilidad)
-                .min(Comparator
-                        .comparing(Operador::getCargaActual, Comparator.nullsFirst(Integer::compareTo))
-                        .thenComparing(Operador::getId))
+        Operador operadorConMenorCarga = operadorRepository.findOperadoresDisponiblesOrdenados()
+                .stream()
+                .findFirst()
                 .orElse(null);
 
         if (operadorConMenorCarga == null) {
