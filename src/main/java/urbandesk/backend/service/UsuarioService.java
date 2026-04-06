@@ -50,13 +50,11 @@ public class UsuarioService {
         return ciudadanoGuardado;
     }
 
-    public Operador registrarOperador(String nombre, String email, String password, int cargaInicialForzada) {
+    public Operador registrarOperador(String nombre, String email, String password) {
         if (existeUsuarioConEmail(email)) {
             throw new DomainRuleViolation("El email ya está registrado");
         }
-
         Operador operador = new Operador(nombre, email, hashPassword(password));
-        operador.forzarCarga(cargaInicialForzada);
         Operador operadorGuardado = usuarioRepository.save(operador);
         return operadorGuardado;
     }

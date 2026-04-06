@@ -23,17 +23,15 @@ public class DataInitializer implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) {
         crearCiudadano();
-        crearOperador("operador1@urbandesk.com", 7);
-        crearOperador("operador2@urbandesk.com", 10);
-        crearOperador("operador3@urbandesk.com", 5);
+        crearOperador("operador1@urbandesk.com");
+        crearOperador("operador2@urbandesk.com");
+        crearOperador("operador3@urbandesk.com");
         crearTecnicoElectricista();
         crearTecnicoFontanero();
         crearTecnicoJardinero();
         crearTecnicoAlbanil();
         crearTecnicoPintor();
-        // crearIncidencia(1L);
-        // crearIncidencia(2L);
-        // crearIncidencia(3L);
+
     }
 
     private void crearCiudadano() {
@@ -43,9 +41,9 @@ public class DataInitializer implements ApplicationRunner {
         }
     }
 
-    private void crearOperador(String email, int cargaInicialForzada) {
+    private void crearOperador(String email) {
         if (usuarioRepository.findByEmail(email).isEmpty()) {
-            usuarioService.registrarOperador("Operador", email, "operador", cargaInicialForzada);
+            usuarioService.registrarOperador("Operador", email, "operador");
         }
     }
 
@@ -82,13 +80,6 @@ public class DataInitializer implements ApplicationRunner {
         if (usuarioRepository.findByEmail(email).isEmpty()) {
             usuarioService.registrarTecnico("Pintor", email, "pintor", Especialidad.PINTOR);
         }
-    }
-
-    public void crearIncidencia(Long id) {
-        Ubicacion ubicacion = new Ubicacion("Calle Falsa 123", 40.4168, -3.7038);
-        String descripcion = "Farola rota en la calle";
-        Long ciudadanoId = 1L; // ID del ciudadano previamente creado
-        incidenciaService.crearIncidencia(ubicacion, descripcion, ciudadanoId, null);
     }
 
 }
