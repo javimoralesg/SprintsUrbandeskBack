@@ -17,7 +17,7 @@ public class InformeController {
 
     private final JdbcTemplate jdbcTemplate;
 
-    @Value("${INFORME_TOKEN}")
+    @Value("${INFORME_TOKEN:default_token}")
     private String expectedToken;
 
     public InformeController(JdbcTemplate jdbcTemplate) {
