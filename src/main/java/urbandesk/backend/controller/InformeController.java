@@ -17,7 +17,7 @@ public class InformeController {
 
     private final JdbcTemplate jdbcTemplate;
 
-    @Value("${INFORME_TOKEN:default_token}")
+    @Value("${APIKEY_INCIDENCIA}")
     private String expectedToken;
 
     public InformeController(JdbcTemplate jdbcTemplate) {
